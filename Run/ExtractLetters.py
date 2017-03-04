@@ -6,6 +6,7 @@ import sourceM
 from imutils import contours
 import os
 import csv
+import fnmatch
 
 class MeerkatReader:
     def __init__(self,indir,outdir,debug,size=150,limit=None):    
@@ -26,10 +27,12 @@ class MeerkatReader:
         #set size limit for character
         self.size=size
         
-        #list files in folder
-        searchpath=self.indir + "/*.jpg"
-        print "Searching for images in " + str(searchpath)
-        self.files=glob.glob(searchpath)        
+        #list files in folder, walk recursively
+        print "Searching for images in " + str(self.indir)
+        
+        for root, dirnames, filenames in os.walk('src'):
+            for filename in fnmatch.filter(filenames, '*.jpg'):
+                self.files.append(os.path.join(root, filename))        
         
         print str(len(self.files)) + " images found" 
         
