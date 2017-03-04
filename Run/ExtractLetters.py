@@ -27,17 +27,21 @@ class MeerkatReader:
         #set size limit for character
         self.size=size
         
-        #list files in folder, walk recursively
-        print "Searching for images in " + str(self.indir)
+        #if files not supplied
         
-        for root, dirnames, filenames in os.walk('src'):
-            for filename in fnmatch.filter(filenames, '*.jpg'):
-                self.files.append(os.path.join(root, filename))        
-        
-        print str(len(self.files)) + " images found" 
-        
-        if len(self.files)==0:
-            raise "No images found, check input file path"
+        if len(paths) < 1:
+            
+            #list files in folder, walk recursively
+            print "Searching for images in " + str(self.indir)
+            
+            for root, dirnames, filenames in os.walk('src'):
+                for filename in fnmatch.filter(filenames, '*.jpg'):
+                    self.files.append(os.path.join(root, filename))        
+            
+            print str(len(self.files)) + " images found" 
+            
+            if len(self.files)==0:
+                raise "No images found, check input file path"
         
         #do just a portion of the files
         if limit:

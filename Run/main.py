@@ -12,9 +12,10 @@ if __name__ == '__main__':
     parser.add_argument("-limit", help="Maximum number of images to process",type=int,default=None)
     parser.add_argument("-size", help="minimum size of contour",type=int,default=150)
     parser.add_argument("-debug", help="View debugger",action="store_true",default=False)    
+    parser.add_argument("-paths", help="Instead of a folder, pass a list of paths",type=argparse.FileType('r'),nargs='+')        
     args = parser.parse_args()
         
     print "indir is: " + str(args.indir)
     print "outdir is: " + str(args.outdir)
     
-    ExtractLetters.runMeerkat(indir=args.indir,outdir=args.outdir,debug=args.debug,size=args.size,limit=args.limit)
+    ExtractLetters.runMeerkat(indir=args.indir,outdir=args.outdir,debug=args.debug,size=args.size,limit=args.limit,paths=args.paths)
