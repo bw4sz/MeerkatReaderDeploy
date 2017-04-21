@@ -26,6 +26,7 @@ mkdir /mnt/gcs-bucket
 
 # #give it permissions
 chmod a+w /mnt/gcs-bucket
+
 #MOUNT 
 gcsfuse --implicit-dirs api-project-773889352370-ml /mnt/gcs-bucket
 
@@ -58,8 +59,8 @@ JOB_NAME=predict_Meerkat_$(date +%Y%m%d_%H%M%S)
 gcloud beta ml jobs submit prediction ${JOB_NAME} \
     --model=${MODEL_NAME} \
     --data-format=TEXT \
-    --input-paths=gs://api-project-773889352370-ml/Hummingbirds/$MONTH/request.json \
-    --output-path=gs://api-project-773889352370-ml/Hummingbirds/$MONTH/prediction/ \
+    --input-paths=gs://api-project-773889352370-ml/staging/letters/request.json \
+    --output-path=gs://api-project-773889352370-ml/Hummingbirds/prediction/ \
     --region=us-central1
     
 #describe job
@@ -67,6 +68,3 @@ gcloud beta ml jobs describe ${JOB_NAME}
  
 #exit ssh
 exit
-
-#kill instance
-gcloud compute instances delete gci
