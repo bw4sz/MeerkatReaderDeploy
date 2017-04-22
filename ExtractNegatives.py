@@ -40,7 +40,10 @@ class Video:
                 if fcount in frame_number:            
                     ret,frame=self.cap.read()
                     frame_to_write.append(frame)
-                    fcount = fcount +1                     
+                    fcount = fcount +1
+                    #break the video when past the last number
+                    if fcount > max(frame_number):
+                        break
         else:
             for f in frame_number:
                 self.cap.set(1,f) #the proper way for videos that can read the codec.
@@ -56,7 +59,7 @@ class Video:
             counter=counter+1
 
 if __name__ == "__main__":
-    vids=glob.glob("C:/Users/Ben/Desktop/MeerkatTest/*.tlv", recursive=True)
+    vids=glob.glob("F:/**/*.tlv", recursive=True)
     print(vids)
     counter=0
     for vid in vids:        
