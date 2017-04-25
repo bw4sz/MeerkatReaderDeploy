@@ -62,7 +62,7 @@ class Organizer:
         #Write to temp then send to google cloud
         handle, fn = tempfile.mkstemp(suffix='.csv')
         
-        with open(handle,"w") as f:
+        with open(handle,"w",newline='') as f:
             writer=csv.writer(f)
             for eachrow in  self.positives_training:
                 writer.writerow([eachrow,"positive"])
@@ -76,7 +76,7 @@ class Organizer:
         #Write to temp then send to google cloud
         handle, fn = tempfile.mkstemp(suffix='.csv')
         
-        with open(handle,"w") as f:
+        with open(handle,"w",newline='') as f:
             writer=csv.writer(f)
             for eachrow in  self.positives_testing:
                 writer.writerow([eachrow,"positive"])
