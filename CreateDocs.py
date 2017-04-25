@@ -73,7 +73,19 @@ class Organizer:
         blob=self.bucket.blob("Hummingbirds/trainingdata.csv")
         blob.upload_from_filename(fn)
         
+        #Write to temp then send to google cloud
+        handle, fn = tempfile.mkstemp(suffix='.csv')
         
+        with open(handle,"w") as f:
+            writer=csv.writer(f)
+            for eachrow in  self.positives_testing:
+                writer.writerow([eachrow,"positive"])
+            for eachrow in  self.negatives_testing:
+                writer.writerow([eachrow,"negative"])
+        
+        #write to google cloud
+        blob=self.bucket.blob("Hummingbirds/testingdata.csv")
+        blob.upload_from_filename(fn)        
         
 if __name__ == "__main__":
     p=Organizer(positives="gs://api-project-773889352370-ml/Hummingbirds/Negatives", negatives="gs://api-project-773889352370-ml/Hummingbirds/to_upload")
