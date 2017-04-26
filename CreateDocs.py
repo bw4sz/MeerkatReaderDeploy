@@ -28,33 +28,52 @@ class Organizer:
         
         #positives
         positives_folder_name=positives.split("/")[3:]
-        pos_ls=self.bucket.list_blobs(fields="items",prefix="/".join(positives_folder_name))        
-        self.positives_files=[]
-        for f in pos_ls:
-            self.positives_files.append("gs://" + f.bucket.name + "/" + f.name)
+        iterator=self.bucket.list_blobs(prefix="/".join(positives_folder_name))        
+        
+        self.positives_files=[]        
+        for page in iterator.pages:
+            print('    Page number: %d' % (iterator.page_number,))
+            print('  Items in page: %d' % (page.num_items,))
+            print('     First item: %r' % (next(page),))
+            print('Items remaining: %d' % (page.remaining,))
+            print('Next page token: %s' % (iterator.next_page_token,))        
+            for f in page:
+                self.positives_files.append("gs://" + f.bucket.name + "/" + f.name)
             
+        print( "Found %d results" %(len( self.positives_files)))  
+        
         #negatives
+        #positives
         negatives_folder_name=negatives.split("/")[3:]
-        pos_ls=self.bucket.list_blobs(fields="items",prefix="/".join(negatives_folder_name))        
-        self.negatives_files=[]
-        for f in pos_ls:
-            self.negatives_files.append("gs://" + f.bucket.name + "/" + f.name)
-    
+        iterator=self.bucket.list_blobs(prefix="/".join(negatives_folder_name))        
+        
+        self.negatives_files=[]        
+        for page in iterator.pages:
+            print('    Page number: %d' % (iterator.page_number,))
+            print('  Items in page: %d' % (page.num_items,))
+            print('     First item: %r' % (next(page),))
+            print('Items remaining: %d' % (page.remaining,))
+            print('Next page token: %s' % (iterator.next_page_token,))        
+            for f in page:
+                self.negatives_files.append("gs://" + f.bucket.name + "/" + f.name)
+            
+        print( "Found %d results" % (len( self.negatives_files)))  
+        
     def divide_data(self,training_prop=0.8):
         
         #Shuffle positive datasets and divide
         positives_random=self.positives_files
         random.shuffle(positives_random)
         
-        self.positives_training=positives_random[int(len(positives_random)*training_prop):]
-        self.positives_testing=positives_random[:int(len(positives_random)*training_prop)]
+        self.positives_training=positives_random[:int(len(positives_random)*training_prop)]
+        self.positives_testing=positives_random[int(len(positives_random)*training_prop):]
 
         #Shuffle negatives datasets and divide
         negatives_random=self.negatives_files
         random.shuffle(negatives_random)
         
-        self.negatives_training=negatives_random[int(len(negatives_random)*training_prop):]
-        self.negatives_testing=negatives_random[:int(len(negatives_random)*training_prop)]
+        self.negatives_training=negatives_random[:int(len(negatives_random)*training_prop)]
+        self.negatives_testing=negatives_random[int(len(negatives_random)*training_prop):]
         
     
     def write_data(self):
@@ -88,6 +107,6 @@ class Organizer:
         blob.upload_from_filename(fn)        
         
 if __name__ == "__main__":
-    p=Organizer(positives="gs://api-project-773889352370-ml/Hummingbirds/Negatives", negatives="gs://api-project-773889352370-ml/Hummingbirds/to_upload")
+    p=Organizer(positives="gs://api-project-773889352370-ml/Hummingbirds/Positives", negatives="gs://api-project-773889352370-ml/Hummingbirds/Negatives")
     p.divide_data(training_prop=0.8)
     p.write_data()
